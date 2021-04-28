@@ -1,0 +1,27 @@
+{
+    "theme_color": "#690505",
+    "background_color": "#690505",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "app_name": "BigProject",
+    "short_name": "Resturant Inspections",
+    "description": "Search for resturants in the Chicago area and see what the inspector comments about the resturant",
+    "icons": [
+        {
+            "src": "/icons/foodIcon-128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/foodIcon-256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/foodIcon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
