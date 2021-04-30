@@ -5,13 +5,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>Resturant Inspections</title>
-  <script src="script.js"></script>
-    <link rel="manifest" href="manifest.json">
+	<script src="sw.js">
+
+	</script>
+	<link rel="manifest" href="manifest.json">
 	<!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
 	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"> -->
 	<style>
 		#topnav {
-			background-color: silver;
+			background-color: #DCEDC8;
 			padding: 4px;
 		}
 
@@ -134,6 +136,14 @@
 
     <div class = "screen" id = "map"> Hello M
       <div id = "mapDisplay" style = "margin-right: 20px"></div>
+     <div class="mdc-switch" id = "geoSwitch"onclick= "switchingButton()" >
+  <div class="mdc-switch__track"></div>
+  <div class="mdc-switch__thumb-underlay">
+    <div class="mdc-switch__thumb"></div>
+    <input type="checkbox" id="another-basic-switch" class="mdc-switch__native-control" role="switch" aria-checked="true" checked>
+  </div>
+</div>
+<label for="another-basic-switch">off/on</label>
     </div>
    </div>
 
@@ -165,7 +175,16 @@
 
     </div>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script> -->
-  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>  
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+  <script>
+      var key = 'b5989b51efee5cb447037365a92a5d16';
+  fetch('https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=77017591ad42d71f19a6a35cdeb2ab0e')  
+  .then(response => response.json()) // Convert data to json
+  .then(data =>console.log(data)) 
+
+.catch(err => alert(err))
+    </script>  
   <script>
       let startScreen = document.location.search.replace("?", "");
 
@@ -220,16 +239,54 @@
           });
 
       let map;
+      let markers =[];
         function initMap(){
           const chicago = {lat:41.8781, lng: -87.6298};          
           map = new google.maps.Map(document.querySelector("#mapDisplay"), {
             center: chicago,
             zoom: 11,
           });
+          }
+      let geoLocation = false;
+      function switchingButton(){
+
+        let switchButton = document.querySelector("#geoSwitch");
+          //switchButton.addEventListener ("click", (changeSwitch) => {
+            if(geoLocation == false){
+              //console.log("hello false")
+              geoLocation = true;
+              console.log(geoLocation);
+              switchButton.classList.add("mdc-switch--checked");
+               const watchID = navigator.geolocation.getCurrentPosition((position) => {
+              map.setCenter({ lat: position.coords.latitude, lng:  position.coords.longitude })
+              console.log(position.coords.latitude, position.coords.longitude);
+              
+              let cityCircle = new google.maps.Circle({
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#FF0000",
+              fillOpacity: 0.35,
+              map,
+              center: { lat: position.coords.latitude, lng:  position.coords.longitude },
+              radius: 40,
+            });
+              });
+            }
+            else if(geoLocation == true){             
+              geoLocation = false; 
+              console.log(geoLocation);
+              switchButton.classList.remove("mdc-switch--checked");
+              
+            }
+        //});
         }
+        
 let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
 
       document.querySelector("#search").addEventListener ("click", (e) => {
+        clearMarkers();
+          document.querySelector("div#dataDisplay").innerHTML = ""
           //document.querySelector("#dataDisplay").innerText = "fetching results";
           document.querySelector("#results").innerText = "fetching results";
 
@@ -258,14 +315,15 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
              //
              alert ("Ooops: " + error);
           }); // fetch
-       console.log(url);   fetch (url)
+       console.log(url); 
+         fetch (url)
             .then ( (response) => { return response.json() })
             .then ( (datas) => {
        
                 document.querySelector("#results").innerText = "Results found: " + datas.length;  
  
                 for (let item of datas) {   
-                
+              
               let clone = document.querySelector("#createCard").cloneNode(true);
               clone.style.display = "block";
               clone.querySelector("div#cardTitle").innerText = item["aka_name"];
@@ -282,6 +340,7 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
               position: {lat: parseFloat(item["latitude"]), lng: parseFloat(item["longitude"])},
               map: map            
           });
+          markers.push(marker);
             let infowindow = new google.maps.InfoWindow({  
              content: inform
           });
@@ -289,11 +348,14 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
              infowindow.open(map,marker);
           });
                 }    
-            })
+             })
       });
       function clearMarkers() {
-                setMapOnAll(null);
+                for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+          marker= [];
                           }
+      }
       </script>
       <script>
      
@@ -308,7 +370,7 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./script.js').then(function(registration) {
+          navigator.serviceWorker.register('./sw.js').then(function(registration) {
             // Registration was successful
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           }, function(err) {

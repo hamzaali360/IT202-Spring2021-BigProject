@@ -1,6 +1,10 @@
 let CACHE_NAME = 'my-site-cache-v1';
 let urlsToCache = [
-  '/'
+  './',
+  'https://unpkg.com/dexie@latest/dist/dexie.js',
+  'https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js',
+  'https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css',
+  'https://data.cityofchicago.org/resource/4ijn-s7e5.json'
 ];
 
 
