@@ -103,7 +103,7 @@
       <div class="mdc-touch-target-wrapper">
   <button class="mdc-button mdc-button--touch">
     <span class="mdc-button__ripple"></span>
-    <span class="mdc-button__label">Search Resturant</span>
+    <span class="mdc-button__label">Search Restaurant </span>
     <span class="mdc-button__touch"></span>
   </button>
 </div>
@@ -113,7 +113,7 @@
            <div class="mdc-touch-target-wrapper">
   <button class="mdc-button mdc-button--touch">
     <span class="mdc-button__ripple"></span>
-    <span class="mdc-button__label">Resturant Info</span>
+    <span class="mdc-button__label">Restaurant Info</span>
     <span class="mdc-button__touch"></span>
   </button> </div>
   </a>
@@ -122,7 +122,7 @@
            <div class="mdc-touch-target-wrapper">
   <button class="mdc-button mdc-button--touch">
     <span class="mdc-button__ripple"></span>
-    <span class="mdc-button__label">Resturant Location</span>
+    <span class="mdc-button__label">Restaurant Location</span>
     <span class="mdc-button__touch"></span>
   </button></div>
   </a>
@@ -178,7 +178,7 @@
       </div>
    </div>
 
-    <div class="mdc-card mdc-card--outlined my-card my-card-content" style = "display: none" id = "createCard">
+    <div class="mdc-card mdc-card--outlined my-card my-card-content" style = "display: none; border-color: #000000;" id = "createCard">
 		<div class="mdc-card-wrapper__text-section ">
 			<div class="demo-card__title" id = "cardTitle">Card title</div>
 			<div class="demo-card__subhead"id= "cardAddress"style = "font-size: 20px">Secondary text</div>
@@ -194,7 +194,17 @@
 		</div>
 
     </div>
- 
+  <!-- <div id = "mapInfomation">
+    <div id ="siteNotic">
+    </div>
+    <h1 id = "resTitle">item["aka_name"]</h1>
+    <div id = "resAddress"> Address: item["address"]</div>
+    <div id = "resInspectionDate">Inspection date: item["inspection_date"]</div>
+    <div id = "resRiskAndResult"> Risk: item["risk"]  Result: item["results"]</div>
+    <div id = "bodyContent">
+    <p1 id = "resViolations"> Violations: item["violations"]</p1>
+    </div>
+  </div> -->
   <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
   <script>
@@ -364,19 +374,43 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
               clone.querySelector("div#cardAddress").innerText = item["address"];
               clone.querySelector("div#cardDate").innerText = "Inspection date: " + item["inspection_date"];
               clone.querySelector("div#cardRisk").innerText = item["risk"] +"\t Inspection Results: " + item["results"];
+              if(item["results"] == "Pass w/ Conditions" || item["results"] == "Pass")
+              {
+                clone.style.backgroundColor = "#00C853"
+              }
+              else if(item["results"] == "Fail" )
+              {
+                clone.style.backgroundColor = "#D50000"
+              }
+              else{
+               // console.log(item["results"])
+                clone.style.backgroundColor = "#FFD600"
+              }
               clone.querySelector("div#violation").innerText = "Violations: \n" + item["violations"];
               document.querySelector("#dataDisplay").append(clone);
 
-
+            let mapInfo =  
+            '<div id = "mapInfomation">' +
+            '<div id ="siteNotic">' +
+            '</div>' +
+            '<h1 id = "resTitle">'+ item["aka_name"]+ '</h1>' +
+            '<div id = "resAddress"> Address: '+ item["address"] +'</div>' +
+            '<div id = "resInspectionDate">Inspection date: ' + item["inspection_date"]+ '</div>' +
+            '<div id = "resRiskAndResult"> Risk: '+ item["risk"] +  '   Result: ' + item["results"] + '</div>' +
+            '<div id = "bodyContent">' +
+            '<p1 id = "resViolations"> Violations: ' + item["violations"]+ '</p1>' +
+            '</div>' +
+            '</div>';
+            
               
-              let inform = "Area: " + item["aka_name"] +  ", Address: " + item["address"] + "Inspection date: " + item["inspection_date"] ;
+              //let inform = "Area: " + item["aka_name"] +  ", Address: " + item["address"] + "Inspection date: " + item["inspection_date"] ;
              let marker = new google.maps.Marker({
               position: {lat: parseFloat(item["latitude"]), lng: parseFloat(item["longitude"])},
               map: map            
           });
           markers.push(marker);
             let infowindow = new google.maps.InfoWindow({  
-             content: inform
+             content: mapInfo
           });
              marker.addListener("click", () => {
              infowindow.open(map,marker);
