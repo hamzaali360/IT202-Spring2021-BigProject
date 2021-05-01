@@ -9,8 +9,7 @@
 
 	</script>
 	<link rel="manifest" href="manifest.json">
-	<!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
-	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"> -->
+
 	<style>
 		#topnav {
 			background-color: #DCEDC8;
@@ -24,6 +23,24 @@
 		.screen {
 			display: none;
 		}
+    .displayWeather{
+      text-align: center;
+    }
+    .mapBoarder{
+    margin-top: 20px;
+    border-block-color: black;
+    border-style: solid;
+    }
+    .weatherBoarder{
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 10%;
+    border-style: solid;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    }
 	</style>
 	<style type="text/css">
 		#mapDisplay {
@@ -69,7 +86,7 @@
 	</script>
 </head>
 
-<body>
+<body style= "background-color:#8BC34A">
 	<div id="topnav">
 		<a data-screen="home">
 			<div class="mdc-touch-target-wrapper">
@@ -118,7 +135,9 @@
   </button></div></a>
       </div>
    <div id = "content"style = "margin-left: 20px">
-     <div class = "screen" id = "home" > Hello H</div>
+     <div class = "screen" id = "home" > 
+       
+     </div>
 
     <div class = "screen" id = "form" > 
       <form id="dataSearch">
@@ -140,7 +159,7 @@
     </div>
 
     <div class = "screen" id = "map"> 
-      <div id = "mapDisplay" style = "margin-right: 20px"></div>
+      <div id = "mapDisplay" class="mapBoarder" style = "margin-right: 20px"></div>
      <div class="mdc-switch" id = "geoSwitch"onclick= "switchingButton()" >
   <div class="mdc-switch__track"></div>
   <div class="mdc-switch__thumb-underlay">
@@ -150,20 +169,14 @@
 </div>
 <label for="another-basic-switch">See your Location</label>
     </div>
-    <div class = "screen" id = "weather">
-      <div> It's weather time </div>
+    <div class = "screen weatherBoarder" id = "weather"style ="background-color: #FFF176;">
+      <div class = "displayWeather">
+        <img src ="weatherImage.png" width = "256" height = "256" >
+        <h1 class = "name"></h1>
+        <div class = "desc"></div>
+        <div class= "temp"></div>
+      </div>
    </div>
-
-   <!-- <div class="mdc-card my-card my-card-content " style = "display: none" id = "createCard">  
-      <div class="mdc-card-wrapper__text-section">
-      <h1 class="mdc-card__title" id = "cardTitle">Card Title</h1>
-      <div class="mdc-card__subhead" id= "cardAddress">Secondary text</div>
-    </div>
-      <div class="mdc-card-wrapper__text-section"><div class="mdc-card__supporting-text" id = "cardInfo">
-          Greyhound divisively hello coldly wonderfully marginally far upon
-          excluding.
-        </div></div>
-    </div> -->
 
     <div class="mdc-card mdc-card--outlined my-card my-card-content" style = "display: none" id = "createCard">
 		<div class="mdc-card-wrapper__text-section ">
@@ -181,14 +194,26 @@
 		</div>
 
     </div>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script> -->
+ 
   <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
   <script>
       //var key = 'b5989b51efee5cb447037365a92a5d16';
+      let name = document.querySelector(".name");
+      let desc = document.querySelector(".desc");
+      let temp = document.querySelector(".temp");
+
   fetch('https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=77017591ad42d71f19a6a35cdeb2ab0e')  
   .then(response => response.json()) // Convert data to json
-  .then(data =>console.log(data)) 
+  .then(data =>{
+    let nameValue = data['name'];
+    let tempValue = data['main']['temp'];
+    let descValue = data['weather'][0]['description'];
+    let tempFur =((tempValue- 273.15) * 9/5 +32)
+    name.innerHTML= nameValue;
+    temp.innerHTML = tempFur.toFixed(2)+"\u00B0 F";
+    desc.innerHTML = descValue;
+  }) 
 
 .catch(err => alert(err))
     </script>  
