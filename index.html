@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Resturant Inspections</title>
+	<title>Restaurant Inspections</title>
 	<script src="sw.js">
 
 	</script>
@@ -136,11 +136,20 @@
       </div>
    <div id = "content"style = "margin-left: 20px">
      <div class = "screen" id = "home" > 
-       
+       <center>
+       <h1 style="background-color: #4DB6AC;margin-top: 0;margin-left: -20px;"> Welcome to the Resturant Inspections</h1>
+       <img src = "images/searchImage.png" width = "150" height = "150"></img><br>
+       <p3> How this application works is to go to the <b>Search Restaurant</b> and select a restaurant in the Chicago area that you want to see information about the restaurant's inspection. After selecting a restaurant, click the search button and go to the <b>Restaurant Info</b> to see the result of the search. If the color is green, that means that the restaurant passed the inspection, if the color is red, it means that the restaurant failed the inspection, and if the color is yellow, it means that the result is either unknown or out of business.</p>
+       <img src ="images/restaurantMap.png" width = "150" height = "150"></img><br>
+       <p1> If you want to see where in the restaurant is located, go to the <b>Restaurant Location</b> to find where the restaurant is at in the Chicago area. When you click on the marker on the map, you can also see the information about the inspection on the restaurant To see where you are at in the map, turn on the switch below the map called <b> See Your location</b>.</p>
+       <img src = "images/homeWeatherImage.png" width = "218.375" height = "162.5"></img><br>
+       <p2 style = "margin-bottom: 5%">If you click on the <b>Weather</b>, you will see the what type of weather and temperature in the Chicago area.</p><br>
+       </center>
      </div>
-
+    <center>
     <div class = "screen" id = "form" > 
-      <form id="dataSearch">
+      <form id="dataSearch"style="margin-top: 20%;margin-right: 25%;margin-left: 25%;background-color: #FF9800;border-style: solid;">
+        <div>Choose a restaurant you want to see</div>
       <select name="aka_name" id="aka_name">
         <option></option>
       </select>
@@ -152,10 +161,13 @@
   <span class="mdc-button__label ">Search Resturant</span>
 </button></div>
 <div id="results"></div>
-    </div>
+<div id = "recentSearch"></div>
+    </div></center>
 
-    <div class = "screen" id = "data"> 
+    <div class = "screen" id = "data">
+      <div>Here are the results of the search:</div>
        <div id = "dataDisplay"></div>
+       <div>(If empty, either no result or did not use the search in Search Restaurant)</div>
     </div>
 
     <div class = "screen" id = "map"> 
@@ -167,11 +179,11 @@
     <input type="checkbox" id="another-basic-switch" class="mdc-switch__native-control" role="switch" aria-checked="true" checked>
   </div>
 </div>
-<label for="another-basic-switch">See your Location</label>
+<label for="another-basic-switch">See Your Location</label>
     </div>
     <div class = "screen weatherBoarder" id = "weather"style ="background-color: #FFF176;">
       <div class = "displayWeather">
-        <img src ="weatherImage.png" width = "256" height = "256" >
+        <img src ="images/weatherImage.png" width = "256" height = "256" >
         <h1 class = "name"></h1>
         <div class = "desc"></div>
         <div class= "temp"></div>
@@ -194,21 +206,9 @@
 		</div>
 
     </div>
-  <!-- <div id = "mapInfomation">
-    <div id ="siteNotic">
-    </div>
-    <h1 id = "resTitle">item["aka_name"]</h1>
-    <div id = "resAddress"> Address: item["address"]</div>
-    <div id = "resInspectionDate">Inspection date: item["inspection_date"]</div>
-    <div id = "resRiskAndResult"> Risk: item["risk"]  Result: item["results"]</div>
-    <div id = "bodyContent">
-    <p1 id = "resViolations"> Violations: item["violations"]</p1>
-    </div>
-  </div> -->
   <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
   <script>
-      //var key = 'b5989b51efee5cb447037365a92a5d16';
       let name = document.querySelector(".name");
       let desc = document.querySelector(".desc");
       let temp = document.querySelector(".temp");
@@ -244,13 +244,10 @@
       
       let archor = event.target.parentNode.parentNode.parentNode
          let screen = archor.getAttribute("data-screen");
- //console.log(screen)
-         let targetScreen = document.querySelector("#" + screen);
-        
+         let targetScreen = document.querySelector("#" + screen);     
          targetScreen.style.display = "block";
         })
-      })
-      
+      }) 
       </script>
 
         <script>
@@ -270,7 +267,7 @@
 
           for (let area of result) {
             let opt = document.createElement("option");
-            opt.innerText = area.aka_name; // + " ("+ area.address + ")";
+            opt.innerText = area.aka_name; 
             document.querySelector("#aka_name").append(opt);
       
           }
@@ -294,9 +291,7 @@
       function switchingButton(){
 
         let switchButton = document.querySelector("#geoSwitch");
-          //switchButton.addEventListener ("click", (changeSwitch) => {
             if(geoLocation == false){
-              //console.log("hello false")
               geoLocation = true;
               console.log(geoLocation);
               switchButton.classList.add("mdc-switch--checked");
@@ -323,7 +318,6 @@
               switchButton.classList.remove("mdc-switch--checked");
               cityCircle.setMap(null);
             }
-        //});
         }
         
 let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
@@ -331,11 +325,9 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
       document.querySelector("#search").addEventListener ("click", (e) => {
         clearMarkers();
           document.querySelector("div#dataDisplay").innerHTML = ""
-          //document.querySelector("#dataDisplay").innerText = "fetching results";
           document.querySelector("#results").innerText = "fetching results";
 
           let f = document.querySelector("form");
-          
           let fd = new FormData(f);
           let sp = new URLSearchParams(fd);
 
@@ -380,10 +372,9 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
               }
               else if(item["results"] == "Fail" )
               {
-                clone.style.backgroundColor = "#D50000"
+                clone.style.backgroundColor = "#E53935"
               }
               else{
-               // console.log(item["results"])
                 clone.style.backgroundColor = "#FFD600"
               }
               clone.querySelector("div#violation").innerText = "Violations: \n" + item["violations"];
@@ -402,8 +393,6 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
             '</div>' +
             '</div>';
             
-              
-              //let inform = "Area: " + item["aka_name"] +  ", Address: " + item["address"] + "Inspection date: " + item["inspection_date"] ;
              let marker = new google.maps.Marker({
               position: {lat: parseFloat(item["latitude"]), lng: parseFloat(item["longitude"])},
               map: map            
@@ -425,15 +414,10 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
                           }
       }
       </script>
-      <script>
-     
-        </script>
-
           <!-- Google map source -->
     <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnpizRoZESqi7RuQ7i8R0XVxOI0cqXmxk&callback=initMap">
 </script>
-    <!-- Include Dexie -->
 
     <script>
       if ('serviceWorker' in navigator) {
