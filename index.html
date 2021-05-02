@@ -161,6 +161,7 @@
   <span class="mdc-button__label ">Search Resturant</span>
 </button></div>
 <div id="results"></div>
+<div>Recent Searches:</div>
 <div id = "recentSearch"></div>
     </div></center>
 
@@ -404,7 +405,8 @@ let resturantData2 = "https://data.cityofchicago.org/resource/4ijn-s7e5.json";
              marker.addListener("click", () => {
              infowindow.open(map,marker);
           });
-                }    
+                }
+                db.resturant.toArray().then(data =>{ document.querySelector("div#recentSearch").innerText = JSON.stringify(data,null,1);});    
              })
       });
       function clearMarkers() {
